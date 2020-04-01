@@ -1,71 +1,75 @@
 <?php
-
 session_start();
 include("db.php");
-$pagename = "Basket"; //Create and populate a variable called $pagename
+$pagename = "Smart Basket"; //Create and populate a variable called $pagename
 echo "<link rel=stylesheet type=text/css href=mystylesheet.css>"; //Call in stylesheet
 echo "<title>" . $pagename . "</title>"; //display name of the page as window title
 echo "<body>";
-
 include("headfile.html"); //include header layout file
+include("detectlogin.php");
 
 echo "<h4>" . $pagename . "</h4>"; //display name of the page on the web page
 
-
-if (isset($_POST['h_prodid'])) {
-
-    $newprodid = $_POST['h_prodid'];
-    $reququantity = $_POST['p_quantity'];
-
-    //create a new cell in the basket session array. Index this cell with the new product id. //Inside the cell store the required product quantity
-    $_SESSION['basket'][$newprodid] = $reququantity;
-    //echo "<p>The doc id ".$newdocid." has been ".$_SESSION['basket'][$newdocid];
-    echo "<p>1 item added";
-
-    echo "<p>Id of the selected product : " . $newprodid . "</p>";
-    echo "<p>Quantity of the selected product : " . $reququantity . "</p>";
-
-    echo "<table border=1>";
-    echo "<tr>
-		<th>Product Name</th>
-		<th>Price</th>
-		<th>Quantity</th>
-		<th>Subtotal</th>
-		<th></th>
-		</tr>";
-    $total = 0;
-    foreach ($_SESSION['basket'] as $index => $value) {
-        $sql = "select prodName,prodPrice from Product where prodId=" . $index;
-        $exeSQL = mysqli_query($conn, $sql) or die (mysqli_error($conn));
-        $arrayp = mysqli_fetch_array($exeSQL);
-        $price = $arrayp['prodPrice'];
-        $subtotal = $value * $price;
-        $total = $total + $subtotal;
-
-        echo "<tr><td>" . $arrayp['prodName'] . "</td>";
-        echo "<td>" . $arrayp['prodPrice'] . "</td>";
-        echo "<td>" . $value . "</td>";
-        echo "<td>" . $subtotal . "</td>";
-        echo "<td><form method=POST action=basket.php>";
-        echo "<input type=hidden name=prodid_del value=" . $index . ">";
-        echo "<input type=submit value='Remove'></td></form>";
-        echo "</tr>";
-    }
-
-    echo "<tr ><td colspan=3>Total</td><td>" . $total . "</td></tr></table><br>";
-    echo "<a href='clearbasket.php'>Clear basket</a><br><br>";
-
-    echo "New Users sign up : <a href='signup.php'>Sign up</a> <br>";
-
-    echo "Users log in : <a href='login.php'>log in </a> <br><br>";
-
-} else {
-    echo "Current basket unchanged";
+if (isset($_POST['hiddenId'])) {
+	$delprodid = $_POST['hiddenId'];
+	unset($_SESSION['basket'][$delprodid]);
+	echo "1 item removed<br>";
 }
 
+if (isset($_POST['h_prodid'])) {
+	$newprodid = $_POST['h_prodid'];
+	$reququantity = $_POST['p_quantity'];
 
-include("footfile.html"); //include footer layout
 
+	$_SESSION['basket'][$newprodid] = $reququantity;
+	echo "<p>1 item added to the basket";
+} else {
+	echo "Current basket unchanged ";
+}
+
+echo "<table>";
+echo "<th>Product Name</th>";
+echo "<th>Price</th>";
+echo "<th>Quantity</th>";
+echo "<th>Subtotal</th>";
+if (isset($_SESSION['basket'])) {
+	$total = 0;
+	echo "<form action=basket.php method=post>";
+	foreach ($_SESSION['basket'] as $index => $value) {
+		//create a $SQL variable and populate it with a SQL statement that retrieves product details 
+		$SQL = "select prodId, prodName, prodPrice from Product where prodId = " . $index;
+		//run SQL query for connected DB or exit and display error message 
+		$exeSQL = mysqli_query($conn, $SQL) or die(mysqli_error($conn));
+		$arrayp = mysqli_fetch_array($exeSQL);
+		echo "<tr>";
+		echo "<td>" . $arrayp['prodName'] . "</td>";
+		echo "<td>$" . $arrayp['prodPrice'] . "</td>";
+		echo "<td>" . $value . "</td>";
+		$subtotal = $arrayp['prodPrice'] * $value;
+		echo "<td>$" . $subtotal . "</td>";
+		echo "<td><input type='submit' value= 'Remove'></td>";
+		echo "<input type=hidden name=hiddenId value=" . $index . ">";
+		echo "</tr>";
+		$total += $subtotal;
+	}
+	echo "<tr>";
+	echo "<td colspan = '3' style = 'text-align:right'><b>Total</b></td>";
+	echo "<td><b>$" . $total . "</b></td>";
+	echo "</tr>";
+	echo "</form>";
+} else {
+	echo "<br>Empty Basket";
+	echo "<tr><td colspan = '3' style = 'text-align:right'><b>Total</b></td>";
+	echo "<td><b>$0.00</b></td></tr>";
+}
+echo "</table>";
+
+echo "<a href='clearbasket.php'>CLEAR BASKET</a>";
+if (isset($_SESSION['userId'])) {
+	echo "<br><br><a href='checkout.php'>Checkout</a>";
+} else {
+	echo "<br><br>New homteq customers : <a href='signup.php'>Sign Up</a>";
+	echo "<br>Returning homteq customers : <a href='login.php'>Log in</a>";
+}
+include("footfile.html"); //include head layout
 echo "</body>";
-
-?>

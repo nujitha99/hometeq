@@ -1,9 +1,11 @@
 <?php
+session_start();
 $pagename="Template"; //Create and populate a variable called $pagename 
 echo "<link rel=stylesheet type=text/css href=mystylesheet.css>"; //Call in stylesheet
 echo "<title>".$pagename."</title>";
 echo "<body>";
 include("headfile.html");
+include ("detectlogin.php");
 echo "<h4>".$pagename."</h4>";
 //display name of the page as window title
 //include header layout file
