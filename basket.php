@@ -19,8 +19,6 @@ if (isset($_POST['hiddenId'])) {
 if (isset($_POST['h_prodid'])) {
 	$newprodid = $_POST['h_prodid'];
 	$reququantity = $_POST['p_quantity'];
-
-
 	$_SESSION['basket'][$newprodid] = $reququantity;
 	echo "<p>1 item added to the basket";
 } else {

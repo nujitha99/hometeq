@@ -21,7 +21,7 @@ echo "<h4>" . $pagename . "</h4>"; //display name of the page on the web page
 
 
 if (!empty($prodName) && !empty($sPicName) && !empty($lPicName) && !empty($sDesc) && !empty($lDesc) && !empty($price) && !empty($stock)) {
-    $sql = "insert into Product (prodName, prodPicNameSmall, prodPicNameLarge, prodDescripShort, prodDescripLong, prodPrice, prodQuantity) values ('$prodName', '$sPicName', '$lPicName', '$sDesc', '$lDesc', '$price', '$stock')";
+    $sql = "insert into Product (prodName, prodPicNameSmall, prodPicNameLarge, prodDescripShort, prodDescripLong, prodPrice, prodQuantity) values ('$prodName', '$sPicName', '$lPicName', '$sDesc', '$lDesc', $price, $stock)";
     $exeSQL = mysqli_query($conn, $sql);
     if (mysqli_errno($conn) == 0) {
         echo "The product has been added <br><br>";
