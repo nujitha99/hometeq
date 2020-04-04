@@ -17,10 +17,7 @@ if(!empty($email) && !empty($psw)){
     $sql="select * from Users";
     $exeSQL=mysqli_query($conn, $sql) or die (mysqli_error($conn)); 
     while($arrayp=mysqli_fetch_array($exeSQL)){
-        if($email!==$arrayp['userEmail']){
-            echo "<p>Email not recognised, login again</p>";
-            break;
-        } else {
+        if($email==$arrayp['userEmail']){
             if($psw!==$arrayp['userPassword']){
                 echo "<p>Password not recognised, login again</p>";
                 break;
@@ -31,7 +28,7 @@ if(!empty($email) && !empty($psw)){
                 $_SESSION['userFName']=$arrayp['userFName'];
                 $_SESSION['userSName']=$arrayp['userSName'];
                 echo "Hello, ".$_SESSION['userFName']." ".$_SESSION['userSName']."<br><br>";
-                if($_SESSION['userType']=='u'){
+                if($_SESSION['userType']=='C'){
                     echo "You have successfully logged in as a hometeq Customer.<br>";
                 } else {
                     echo "You have successfully logged in as a hometeq Admin.<br>";
@@ -40,9 +37,12 @@ if(!empty($email) && !empty($psw)){
                 echo "Continue shopping for <a href=index.php>Home Tech</a><br>";
                 echo "view your <a href=basket.php>Smart Basket</a>";
                                 
-            break;
+             break;
             }
         }
+    }
+    if($email!==$arrayp['userEmail']){
+        
     }
 } else {
     echo "Entered email: ".$email."<br>";
@@ -51,4 +51,3 @@ if(!empty($email) && !empty($psw)){
 
 include("footfile.html"); //include footer layout
 echo "</body>";
-?>
