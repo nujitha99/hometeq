@@ -76,4 +76,3 @@ echo "</table>";
 
 include("footfile.html");
 echo "</body>";
-?>

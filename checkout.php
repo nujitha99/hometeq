@@ -14,7 +14,7 @@ $userId = $_SESSION['userId'];
 date_default_timezone_set('Asia/Colombo');
 $currentdatetime = date("Y-m-d H:i:s");
 
-$query = "insert into Orders (userId, orderDateTime) values ('$userId', '$currentdatetime');";
+$query = "insert into Orders (userId, orderDateTime, orderStatus) values ('$userId', '$currentdatetime', 'Placed');";
 $exeSQL = mysqli_query($conn, $query) or die ($conn);
 
 if (mysqli_errno($conn) == 0) {

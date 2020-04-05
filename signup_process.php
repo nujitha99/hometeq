@@ -3,7 +3,7 @@
 session_start();
 include("db.php");
 
-$type = 'u';
+$type = 'C';
 $fName = $_POST['fName'];
 $lName = $_POST['lName'];
 $address = $_POST['address'];
